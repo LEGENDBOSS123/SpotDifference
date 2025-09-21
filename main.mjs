@@ -23,7 +23,6 @@ upload.addEventListener('change', (e) => {
 });
 
 
-
 async function generateDifferenceGame(img) {
     imagesDiv.innerHTML = '';
     updateStatus('Generating differences...');
@@ -85,6 +84,7 @@ async function generateDifferenceGame(img) {
     }
     canvasModified.addEventListener('click', handleCanvasClick);
     canvasOrig.addEventListener('click', handleCanvasClick);
+    revealAllButton.classList.remove('disabled');
 }
 
 
@@ -139,11 +139,7 @@ function revealAll() {
 
 revealAllButton.addEventListener('click', revealAll);
 
-// --- UI and Drawing Functions ---
 
-/**
- * Updates the status message with the number of remaining differences.
- */
 function updateStatus(overrideMessage = '') {
     if (overrideMessage) {
         statusDiv.textContent = overrideMessage;
@@ -154,6 +150,8 @@ function updateStatus(overrideMessage = '') {
         statusDiv.textContent = `${gameState.remaining} difference(s) to go!`;
     } else {
         statusDiv.textContent = `Congratulations, you found them all! Choose another image to play again!`;
+        confetti();
+        revealAllButton.classList.add('disabled');
     }
 
     incorrectGuessesDiv.textContent = `Incorrect Clicks: ${gameState.incorrectGuesses}`;
@@ -279,4 +277,38 @@ function applyFlip(canvasOrig, canvasModified, region) {
     ctx.scale(-1, 1);
     ctx.drawImage(tempCanvas, 0, 0);
     ctx.restore();
+}
+
+function confetti() {
+    const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
+    const numberOfPieces = 100;
+
+    for (let i = 0; i < numberOfPieces; i++) {
+        const piece = document.createElement('div');
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const randomSize = Math.floor(Math.random() * 10) + 5;
+        const randomLeft = Math.random() * 100;
+        const randomDelay = Math.random() * 2;
+        const randomDuration = Math.random() * 4 + 2;
+
+        piece.style.backgroundColor = randomColor;
+        piece.style.left = `${randomLeft}vw`;
+        piece.style.top = `-20px`;
+        piece.style.setProperty('--size', `${randomSize}px`);
+        piece.style.setProperty('--delay', `${randomDelay}s`);
+        piece.style.setProperty('--duration', `${randomDuration}s`);
+
+        if (Math.random() < 0.5) {
+            piece.style.borderRadius = '50%';
+        } else {
+            piece.style.borderRadius = '2px';
+        }
+
+        piece.className = 'confetti-piece';
+        document.body.appendChild(piece);
+
+        piece.addEventListener('animationend', () => {
+            piece.remove();
+        });
+    }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +12,36 @@
             color: #333;
             padding: 20px;
         }
+
         h1 {
             text-align: center;
         }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotateZ(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotateZ(720deg);
+                opacity: 0;
+            }
+        }
+
+
+
+        .confetti-piece {
+            position: fixed;
+            z-index: 1000;
+            animation: confetti-fall var(--duration) linear forwards;
+            border-radius: 50%;
+            width: var(--size);
+            height: var(--size);
+            opacity: 0;
+            animation-delay: var(--delay);
+        }
+
         #controls {
             display: flex;
             flex-direction: column;
@@ -21,21 +49,25 @@
             gap: 15px;
             margin-bottom: 20px;
         }
+
         #status {
             font-size: 1.2em;
             font-weight: bold;
             color: #4a4a4a;
         }
+
         #incorrectGuesses {
             font-size: 1em;
             color: #4a4a4a;
         }
+
         #images {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
         }
+
         #revealAll {
             background-color: #4CAF50;
             border: none;
@@ -49,26 +81,35 @@
             cursor: pointer;
             border-radius: 4px;
         }
+
+        .disabled {
+            pointer-events: none;
+            background-color: #8d8d8d !important;
+        }
+
         canvas {
             border: 2px solid #ccc;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
     </style>
 </head>
+
 <body>
 
     <h1>Spot the Difference Generator</h1>
     <div id="controls">
+        <div id="status">Upload an image to start</div>
         <input type="file" id="upload" accept="image/*">
-        <div id="status">Upload an image to start!</div>
+
         <div id="incorrectGuesses">Incorrect Clicks: 0</div>
-        <button id="revealAll">Reveal All Differences</button>
+        <button id="revealAll" class="disabled">Reveal All Differences</button>
     </div>
-    
+
     <div id="images"></div>
 
     <script src="main.mjs"></script>
 </body>
+
 </html>
